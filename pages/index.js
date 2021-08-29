@@ -1,65 +1,75 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { Heading, Box, Flex, Button, Text } from '@chakra-ui/react';
+import useAuth from 'src/hooks/useAuth';
+import Layout from 'src/components/Layout';
+import { getAllTechnologies } from 'src/lib/dato-cms.js';
+const Cover = ({ teches }) => {
+  const bgColor = '#FFF';
 
-export default function Home() {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Box bgColor={bgColor}>
+      <Flex justifyContent="center" alignItems="center" py={20}>
+        <Flex
+          px={[4, 8]}
+          py={[0, 20]}
+          w="full"
+          maxW="1200px"
+          direction="column"
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+          <Heading
+            as="h1"
+            fontSize={{ base: '42px', md: '52px', lg: '72px' }}
+            mb={4}
+            fontWeight="xBold"
+          >
+            Aprenda programação
+            <Box>direto ao ponto </Box>
+            <Box bgGradient="linear(to-l, #7928CA,#FF0080)" bgClip="text">
+              100% free.
+            </Box>
+          </Heading>
+          <Text fontSize={{ base: '16px', md: '20px', lg: '22px' }}>
+            <Box>
+              Mantenha seus conhecimentos atualizados com as mais novas{' '}
+            </Box>
+            <Box>tecnologias que estão disponíveis no mercado!</Box>
+          </Text>
+          <Box>
+            <Button
+              as="a"
+              my={10}
+              colorScheme="purple"
+              variant="outline"
+              size="lg"
+              href="#series"
+            >
+              Bora começar!
+            </Button>
+          </Box>
+
+          {teches.map((t) => {
+            return <Box>{t.name}</Box>;
+          })}
+        </Flex>
+      </Flex>
+    </Box>
+  );
+};
+export default function Home({ teches }) {
+  const { signIn } = useAuth();
+  return (
+    <Layout>
+      <Cover teches={teches} />
+    </Layout>
+  );
 }
+
+export const getStaticProps = async () => {
+  const teches = await getAllTechnologies();
+
+  return {
+    props: {
+      teches,
+    },
+    revalidate: 120,
+  };
+};
